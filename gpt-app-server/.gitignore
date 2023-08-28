@@ -1,0 +1,6 @@
+.env
+chroma
+filings
+model
+.venv
+__pycache__

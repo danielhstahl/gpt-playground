@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "gpt-app-server"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+chromadb = "^0.4.7"
+gpt4all = "^1.0.8"
+sec-api = "^1.0.17"
+python-dotenv = "^1.0.0"
+langchain = "^0.0.274"
+unstructured = "^0.10.7"
+html2text = "^2020.1.16"
+uvicorn = {extras = ["standard"], version = "^0.23.2"}
+python-multipart = "^0.0.6"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
