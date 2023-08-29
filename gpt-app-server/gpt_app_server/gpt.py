@@ -7,20 +7,28 @@ from gpt_app_server.extract_filing_langchain import (
 )
 from langchain import PromptTemplate, LLMChain
 from langchain.llms import GPT4All
+from langchain.vectorstores.base import VectorStoreRetriever
 import os
 from gpt_app_server.prompt import base_prompt
-from typing import Callable
+from typing import Callable, Tuple
+
+
+def init_model(
+    model_name: str = DEFAULT_MODEL_NAME,
+    location_of_model: str = DEFAULT_MODEL_LOCATION,
+) -> Tuple[GPT4All, VectorStoreRetriever]:
+    model = os.path.join(location_of_model, model_name)
+    embeddings = GPT4AllEmbeddings()
+    return GPT4All(model=model), return_retriever_from_persistant_vector_db(embeddings)
 
 
 def chat(
+    llm,
+    retriever: VectorStoreRetriever,
     prompt: Callable[[], PromptTemplate] = base_prompt,
-    model_name: str = DEFAULT_MODEL_NAME,
-    location_of_model: str = DEFAULT_MODEL_LOCATION,
 ):
-    embeddings = GPT4AllEmbeddings()
-    retriever = return_retriever_from_persistant_vector_db(embeddings)
-    model = os.path.join(location_of_model, model_name)
-    llm = GPT4All(model=model)
+    # embeddings = GPT4AllEmbeddings()
+    # retriever = return_retriever_from_persistant_vector_db(embeddings)
     chain_type_kwargs = {"prompt": prompt()}
     qa_chain = RetrievalQA.from_chain_type(
         llm=llm,
@@ -33,7 +41,8 @@ def chat(
 
 
 if __name__ == "__main__":
-    chat_inst = chat()
+    llm, retriever = init_model()
+    chat_inst = chat(llm, retriever)
     while True:
         query = input("What's on your mind: ")
         if query == "exit":

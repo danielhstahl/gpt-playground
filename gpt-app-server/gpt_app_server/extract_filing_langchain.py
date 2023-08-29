@@ -1,15 +1,18 @@
 import os
 from typing import Optional, List, Callable
 from langchain.vectorstores import Chroma
-from langchain.document_loaders import DirectoryLoader
+from langchain.document_loaders import DirectoryLoader, TextLoader
 from langchain.embeddings import GPT4AllEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.schema.document import Document
+from tempfile import SpooledTemporaryFile
+import shutil
 from gpt4all import GPT4All
 from pathlib import Path
 
 DEFAULT_VECTOR_LOCATION = "./chroma"
 DEFAULT_MODEL_LOCATION = "./model"
+DEFAULT_FILE_STORAGE = "./filings"
 DEFAULT_MODEL_NAME = "orca-mini-3b.ggmlv3.q4_0.bin"
 TARGET_SOURCE_CHUNKS = 4
 
@@ -18,6 +21,12 @@ def extract_filings(directory: str) -> List[Document]:
     # instantiate the DirectoryLoader class
 
     loader = DirectoryLoader(directory)
+    loaded_filings = loader.load()
+    return loaded_filings
+
+
+def extract_document(file_path: str) -> List[Document]:
+    loader = TextLoader(file_path)
     loaded_filings = loader.load()
     return loaded_filings
 
@@ -90,7 +99,7 @@ def return_retriever_from_persistant_vector_db(
 
 
 def extract_embeddings(
-    location_of_filings: str = "./filings",
+    location_of_filings: str = DEFAULT_FILE_STORAGE,
 ):
     chunked_documents = split_documents(
         loaded_filings=extract_filings(location_of_filings)
@@ -115,6 +124,21 @@ def download_gpt_model(
     model = GPT4All(model_name, model_path=location_of_model)
 
 
+def upload_document(
+    file_name: str, file: SpooledTemporaryFile, directory: str = DEFAULT_FILE_STORAGE
+):
+    file_location = os.path.join(directory, file_name)
+    with open(file_location, "wb+") as file_object:
+        shutil.copyfileobj(file, file_object)
+    chunked_documents = split_documents(loaded_filings=extract_document(file_location))
+    embeddings = GPT4AllEmbeddings()
+    vector_db = convert_document_to_embeddings(
+        chunked_docs=chunked_documents, embedder=embeddings
+    )
+    print("=> vector db initialised and updated.")
+    print("Finished processing document")
+
+
 if __name__ == "__main__":
     extract_embeddings()
-    # download_gpt_model()
+    download_gpt_model()

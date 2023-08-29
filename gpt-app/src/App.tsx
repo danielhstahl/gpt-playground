@@ -1,68 +1,55 @@
 import React from 'react';
-import { Layout, Space } from 'antd';
+import { Layout, Menu } from 'antd';
+import { Outlet, useNavigate, useLocation } from "react-router-dom";
+import Chat from './Chat';
+import Prompt from './Prompt';
+import DragDrop from './DragDrop';
+import Home from './Home'
+const { Header, Footer, Content } = Layout;
 
-const { Header, Footer, Sider, Content } = Layout;
+export const loader = () => {
+  return fetch("/session", {
+    method: "POST",
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+}
 
-const headerStyle: React.CSSProperties = {
-  textAlign: 'center',
-  color: '#fff',
-  height: 64,
-  paddingInline: 50,
-  lineHeight: '64px',
-  backgroundColor: '#7dbcea',
+export const CHAT_ROUTE = "/chat"
+export const CONTEXT_ROUTE = "/context"
+export const PROMPT_ROUTE = "/prompt"
+
+
+export const MenuItems = [
+  { key: "/", label: "Home", element: <Home /> },
+  { key: CHAT_ROUTE, label: "Chat", element: <Chat /> },
+  { key: CONTEXT_ROUTE, label: "Add context", element: <DragDrop /> },
+  { key: PROMPT_ROUTE, label: "Prompt", element: <Prompt /> },
+]
+
+const App: React.FC = () => {
+  const navigate = useNavigate();
+  const location = useLocation()
+  return (
+    <Layout className="layout">
+      <Header style={{ display: 'flex', alignItems: 'center' }}>
+        <div className="demo-logo" />
+        <Menu
+          theme="dark"
+          mode="horizontal"
+          onClick={({ key }) => navigate(key)}
+          selectedKeys={[location.pathname]}
+          items={MenuItems.map(({ key, label }) => ({ key, label }))}
+        />
+      </Header>
+      <Content style={{ padding: '0 50px' }}>
+        <Outlet />
+      </Content>
+      <Footer style={{ textAlign: 'center' }}>GPT Playground</Footer>
+    </Layout>
+  );
 };
 
-const contentStyle: React.CSSProperties = {
-  textAlign: 'center',
-  minHeight: 120,
-  lineHeight: '120px',
-  color: '#fff',
-  backgroundColor: '#108ee9',
-};
 
-const siderStyle: React.CSSProperties = {
-  textAlign: 'center',
-  lineHeight: '120px',
-  color: '#fff',
-  backgroundColor: '#3ba0e9',
-};
-
-const footerStyle: React.CSSProperties = {
-  textAlign: 'center',
-  color: '#fff',
-  backgroundColor: '#7dbcea',
-};
-
-const App: React.FC = () => (
-  <Space direction="vertical" style={{ width: '100%' }} size={[0, 48]}>
-    <Layout>
-      <Header style={headerStyle}>Header</Header>
-      <Content style={contentStyle}>Content</Content>
-      <Footer style={footerStyle}>Footer</Footer>
-    </Layout>
-    <Layout>
-      <Header style={headerStyle}>Header</Header>
-      <Layout hasSider>
-        <Sider style={siderStyle}>Sider</Sider>
-        <Content style={contentStyle}>Content</Content>
-      </Layout>
-      <Footer style={footerStyle}>Footer</Footer>
-    </Layout>
-    <Layout>
-      <Header style={headerStyle}>Header</Header>
-      <Layout hasSider>
-        <Content style={contentStyle}>Content</Content>
-        <Sider style={siderStyle}>Sider</Sider>
-      </Layout>
-      <Footer style={footerStyle}>Footer</Footer>
-    </Layout>
-    <Layout>
-      <Sider style={siderStyle}>Sider</Sider>
-      <Layout>
-        <Header style={headerStyle}>Header</Header>
-        <Content style={contentStyle}>Content</Content>
-        <Footer style={footerStyle}>Footer</Footer>
-      </Layout>
-    </Layout>
-  </Space>
-);
+export default App

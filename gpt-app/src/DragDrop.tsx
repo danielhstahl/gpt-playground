@@ -32,7 +32,7 @@ const DragDrop: React.FC = () => (
         </p>
         <p className="ant-upload-text">Click or drag file to this area to upload.  </p>
         <p className="ant-upload-hint">
-            Uploading files will store the file on the server, parse the file into embeddings, and save the embeddings to the Chroma vector database.
+            Uploading files will add the document to the knowledge base, improving the quality of the responses.
         </p>
     </Dragger>
 );
