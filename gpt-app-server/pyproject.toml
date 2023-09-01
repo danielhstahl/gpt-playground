@@ -6,18 +6,23 @@ authors = ["Your Name <you@example.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
-chromadb = "^0.4.7"
-gpt4all = "^1.0.8"
+# old version due to sqlite dependency in newer versions
+chromadb = "^0.3.29"
 sec-api = "^1.0.17"
 python-dotenv = "^1.0.0"
 langchain = "^0.0.274"
 unstructured = "^0.10.7"
 html2text = "^2020.1.16"
-uvicorn = {extras = ["standard"], version = "^0.23.2"}
+uvicorn = { extras = ["standard"], version = "^0.23.2" }
 python-multipart = "^0.0.6"
+gpt4all = { git = "https://github.com/nomic-ai/gpt4all.git", rev = "d55cbbee3280ffbbe7570aae0ac2aad3994e7711", subdirectory = "gpt4all-bindings/python" }
+# older chroma uses duckdb
+duckdb = "^0.8.1"
+# 2.1.0 no longer exports dtype from pandas.core.arrays.arrow
+pandas = "2.0.3"
 
 [tool.poetry.dev-dependencies]
-pytest = "^5.2"
+pytest = "^7.3"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

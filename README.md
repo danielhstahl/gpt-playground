@@ -6,7 +6,7 @@
 
 `poetry run python gpt_app_server/extract_filing_langchain.py`
 
-`poetry run python gpt_app_server/gpt.py`
+Not needed, but cool to explore: `poetry run python gpt_app_server/gpt.py`
 
 `poetry run uvicorn gpt_app_server.main:app --reload`
 

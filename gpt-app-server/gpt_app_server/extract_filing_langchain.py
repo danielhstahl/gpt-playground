@@ -13,7 +13,7 @@ from pathlib import Path
 DEFAULT_VECTOR_LOCATION = "./chroma"
 DEFAULT_MODEL_LOCATION = "./model"
 DEFAULT_FILE_STORAGE = "./filings"
-DEFAULT_MODEL_NAME = "orca-mini-3b.ggmlv3.q4_0.bin"
+DEFAULT_MODEL_NAME = "ggml-model-gpt4all-falcon-q4_0.bin"
 TARGET_SOURCE_CHUNKS = 4
 
 

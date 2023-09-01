@@ -7,7 +7,8 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
-
+import { ROOT_ID } from './utils/constants'
+import { PromptProviderComponent, ChatProviderComponent } from './state/providers'
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
@@ -15,6 +16,7 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
+    id: ROOT_ID,
     errorElement: <p>Uh oh, 404</p>,
     loader,
     children: MenuItems.map(({ key, element }) => ({ path: key, element }))
@@ -23,7 +25,11 @@ const router = createBrowserRouter([
 ]);
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <ChatProviderComponent>
+      <PromptProviderComponent>
+        <RouterProvider router={router} />
+      </PromptProviderComponent>
+    </ChatProviderComponent>
   </React.StrictMode>
 );
 

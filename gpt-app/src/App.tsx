@@ -1,10 +1,10 @@
 import React from 'react';
 import { Layout, Menu } from 'antd';
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
-import Chat from './Chat';
-import Prompt from './Prompt';
-import DragDrop from './DragDrop';
-import Home from './Home'
+import Chat from './pages/Chat';
+import Prompt from './pages/Prompt';
+import DragDrop from './pages/DragDrop';
+import Home from './pages/Home'
 const { Header, Footer, Content } = Layout;
 
 export const loader = () => {
@@ -32,7 +32,7 @@ const App: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation()
   return (
-    <Layout className="layout">
+    <Layout className="layout" style={{ minHeight: "100vh" }}>
       <Header style={{ display: 'flex', alignItems: 'center' }}>
         <div className="demo-logo" />
         <Menu
