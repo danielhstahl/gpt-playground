@@ -1,5 +1,4 @@
-import React, { useState } from "react"
-import { PropsWithChildren } from 'react'
+import React, { useState, PropsWithChildren } from "react"
 
 type Source = {
     filename: string
@@ -19,8 +18,8 @@ export const ChatProviderComponent = ({ children }: PropsWithChildren) => {
 
     const updateContext = (contextUpdates: Question) =>
         setContext(currentContext => ({
-            questions: [...currentContext.questions, contextUpdates],
-            addQuestion: currentContext.addQuestion
+            ...currentContext,
+            questions: [contextUpdates, ...currentContext.questions], //show in reverse order
         })
         )
 
