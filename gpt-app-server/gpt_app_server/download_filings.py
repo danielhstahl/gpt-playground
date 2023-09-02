@@ -4,14 +4,9 @@ from dotenv import load_dotenv
 from pathlib import Path
 import html2text
 
-load_dotenv()  # take environment variables from .env.
-SEC_KEY = os.getenv("SEC_KEY")
-queryApi = QueryApi(api_key=SEC_KEY)
-render_api = RenderApi(api_key=SEC_KEY)
-
 
 # download filing and save to "filings" folder
-def download_filing(url: str, directory: str = "./filings"):
+def download_filing(url: str, render_api, directory: str = "./filings"):
     try:
         filing = render_api.get_filing(url)
         # print(filing)
@@ -28,7 +23,7 @@ def download_filing(url: str, directory: str = "./filings"):
         print(e)
 
 
-def download_10_q(ticker: str = "RF", quantity: int = 5):
+def download_10_q(query_api, render_api, ticker: str = "RF", quantity: int = 5):
     query = {
         "query": {
             "query_string": {
@@ -40,10 +35,15 @@ def download_10_q(ticker: str = "RF", quantity: int = 5):
         "sort": [{"filedAt": {"order": "desc"}}],
     }
 
-    response = queryApi.get_filings(query)
+    response = query_api.get_filings(query)
     for filing in response["filings"]:
-        download_filing(filing["linkToFilingDetails"])
+        download_filing(filing["linkToFilingDetails"], render_api)
 
 
 if __name__ == "__main__":
-    download_10_q()
+    load_dotenv()  # take environment variables from .env.
+    SEC_KEY = os.getenv("SEC_KEY", None)
+    if SEC_KEY:
+        query_api = QueryApi(api_key=SEC_KEY)
+        render_api = RenderApi(api_key=SEC_KEY)
+        download_10_q(query_api, render_api)

@@ -2,8 +2,6 @@ from langchain.chains import RetrievalQA
 from langchain.embeddings import GPT4AllEmbeddings
 from gpt_app_server.extract_filing_langchain import (
     return_retriever_from_persistant_vector_db,
-    DEFAULT_MODEL_LOCATION,
-    DEFAULT_MODEL_NAME,
 )
 from langchain import PromptTemplate, LLMChain
 from langchain.llms import GPT4All
@@ -11,6 +9,7 @@ from langchain.vectorstores.base import VectorStoreRetriever
 import os
 from gpt_app_server.prompt import base_prompt
 from typing import Callable, Tuple
+from gpt_app_server.download_llm import DEFAULT_MODEL_LOCATION, DEFAULT_MODEL_NAME
 
 
 def init_model(

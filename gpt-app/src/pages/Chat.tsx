@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Button, Input, Spin, List, Collapse, Row, Col } from 'antd';
-import { useLoaderData } from "react-router-dom";
+import { useRouteLoaderData } from "react-router-dom";
+import { ROOT_ID } from '../utils/constants'
+import { ChatContext } from '../state/providers';
 const { TextArea } = Input;
 
 const submitQuestion = (sessionId: string, text: string) => {
@@ -25,19 +27,19 @@ const displayQuestions = (questions: Question[]) => {
     return questions.map((v, i) => ({
         key: i,
         label: `Submission: ${v.question}.  Response: ${v.answer}`,
-        children: <List>{v.sources.map(source => <List.Item>{source.filename}: {source.content}</List.Item>)}</List>
+        children: <List>{v.sources.map((source, i) => <List.Item key={i}>{source.filename}: {source.content}</List.Item>)}</List>
     }))
 }
 const Chat: React.FC = () => {
-    const uid = useLoaderData() as string;
+    const uid = useRouteLoaderData(ROOT_ID) as string;
     const [text, setText] = useState("")
     const [isWaiting, setIsWaiting] = useState(false)
-    const [questions, setQuestions] = useState<Question[]>([]) //append previous questions and answers
+    const { questions, addQuestion } = useContext(ChatContext)
     const askQuestion = () => {
         setIsWaiting(true)
         return submitQuestion(uid, text)
             .then(result => result.json())
-            .then(result => setQuestions(v => [...v, { ...result, question: text }]))
+            .then(result => addQuestion({ ...result, question: text }))
             .finally(() => {
                 setIsWaiting(false)
                 setText("")

@@ -1,0 +1,9 @@
+# .venv 
+**/.venv
+**/__pycache__
+**/model 
+**/.env
+**/chroma
+**/filings 
+**/node_modules
+**/build

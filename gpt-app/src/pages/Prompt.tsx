@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { message, Button, Input, Switch, Row, Col, Modal } from 'antd';
-import { useLoaderData } from "react-router-dom";
-
+import { useRouteLoaderData } from "react-router-dom";
+import { ROOT_ID } from '../utils/constants'
+import { PromptContext } from '../state/providers';
 const { TextArea } = Input;
 
 const submitPrompt = (sessionId: string, text: string) => {
@@ -10,10 +11,6 @@ const submitPrompt = (sessionId: string, text: string) => {
             'Content-Type': 'application/json'
         }, body: JSON.stringify({ prompt: text })
     })
-}
-type Prompt = {
-    prompt: string
-    isEnabled: boolean
 }
 
 type ModalProps = {
@@ -24,27 +21,18 @@ type ModalProps = {
 const SubmitPromptModal: React.FC<ModalProps> = ({ modalOpen, onOk, onCancel }: ModalProps) => {
     const [text, setText] = useState("")
     return <Modal title="Create prompt" open={modalOpen} onOk={() => onOk(text)} onCancel={onCancel} >
-        <p>Requires {"{question}"} to be put in the prompt</p>
+        <p>Requires {"{context}"} and {"{question}"} to be put in the prompt</p>
         <TextArea value={text} onChange={v => setText(v.target.value)} />
     </Modal>
 }
 
-//type Props = { uid: string }
 const ListPrompt: React.FC = () => {
-    const uid = useLoaderData() as string;
+    const uid = useRouteLoaderData(ROOT_ID) as string;
     const [messageApi] = message.useMessage();
     const [modalOpen, setIsModalOpen] = useState(false)
-    //const [isWaiting, setIsWaiting] = useState(false)
-    const [prompts, setPrompts] = useState<Prompt[]>([{
-        prompt: `Answer the question from the following context.
-        
-        {context}
-        
-        Question: {question}`,
-        isEnabled: true
-    }]) //append previous questions and answers
+    const { prompts, updatePromptEnable, addPrompt } = useContext(PromptContext)
     const updateSwitch = (value: boolean, index: number) => {
-        setPrompts(prompts => prompts.map((v, i) => i === index ? { ...v, isEnabled: value } : v))
+        updatePromptEnable(value, index)
         if (value) {
             submitPrompt(uid, prompts[index].prompt).then(() => {
                 messageApi.open({
@@ -61,7 +49,7 @@ const ListPrompt: React.FC = () => {
     }
 
     const handleOk = (text: string) => {
-        setPrompts(prompts => [...prompts, { prompt: text, isEnabled: false }])
+        addPrompt({ prompt: text, isEnabled: false })
         setIsModalOpen(false)
     }
     const handleCancel = () => setIsModalOpen(false)
@@ -79,5 +67,6 @@ const ListPrompt: React.FC = () => {
         <SubmitPromptModal modalOpen={modalOpen} onOk={handleOk} onCancel={handleCancel} />
     </>
 }
+
 
 export default ListPrompt;

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { CHAT_ROUTE, CONTEXT_ROUTE, PROMPT_ROUTE } from "./App"
+import { CHAT_ROUTE, CONTEXT_ROUTE, PROMPT_ROUTE } from "../App"
 const Home = () => {
     return <>
         <h3>Welcome to the GPT playground!</h3>

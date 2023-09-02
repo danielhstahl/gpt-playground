@@ -7,13 +7,9 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.schema.document import Document
 from tempfile import SpooledTemporaryFile
 import shutil
-from gpt4all import GPT4All
-from pathlib import Path
 
 DEFAULT_VECTOR_LOCATION = "./chroma"
-DEFAULT_MODEL_LOCATION = "./model"
 DEFAULT_FILE_STORAGE = "./filings"
-DEFAULT_MODEL_NAME = "orca-mini-3b.ggmlv3.q4_0.bin"
 TARGET_SOURCE_CHUNKS = 4
 
 
@@ -115,15 +111,6 @@ def extract_embeddings(
     print("All done")
 
 
-def download_gpt_model(
-    model_name: str = DEFAULT_MODEL_NAME,
-    location_of_model: str = DEFAULT_MODEL_LOCATION,
-):
-    folder = Path(location_of_model)
-    folder.mkdir(parents=True, exist_ok=True)  # create the folder if it doesnt exist
-    model = GPT4All(model_name, model_path=location_of_model)
-
-
 def upload_document(
     file_name: str, file: SpooledTemporaryFile, directory: str = DEFAULT_FILE_STORAGE
 ):
@@ -141,4 +128,3 @@ def upload_document(
 
 if __name__ == "__main__":
     extract_embeddings()
-    download_gpt_model()
