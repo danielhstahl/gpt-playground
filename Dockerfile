@@ -23,8 +23,7 @@ RUN cd gpt4all/gpt4all-backend/ && mkdir build && cd build && cmake .. && cmake 
 RUN cp -a /server/gpt-app-server/gpt4all/gpt4all-backend/build/. $(poetry run python -c 'import sysconfig; print(sysconfig.get_paths()["purelib"])')/gpt4all/llmodel_DO_NOT_MODIFY/build/
 RUN rm -rf gpt4all
 RUN mkdir chroma && mkdir filings && mkdir model
-#RUN poetry run python gpt_app_server/download_filings.py
-#RUN poetry run python gpt_app_server/extract_filing_langchain.py
+RUN poetry run python gpt_app_server/download_llm.py
 COPY --from=0 /ui/gpt-app/build /server/gpt-app/build
 
-CMD ["poetry", "run", "uvicorn", "gpt_app_server.main:app"]
+CMD ["poetry", "run", "uvicorn", "--host", "0.0.0.0", "gpt_app_server.main:app"]
