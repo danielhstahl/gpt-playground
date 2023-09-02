@@ -26,8 +26,7 @@ def chat(
     retriever: VectorStoreRetriever,
     prompt: Callable[[], PromptTemplate] = base_prompt,
 ):
-    # embeddings = GPT4AllEmbeddings()
-    # retriever = return_retriever_from_persistant_vector_db(embeddings)
+    # doesn't include history; to do so use something like https://stackoverflow.com/a/76246346
     chain_type_kwargs = {"prompt": prompt()}
     qa_chain = RetrievalQA.from_chain_type(
         llm=llm,

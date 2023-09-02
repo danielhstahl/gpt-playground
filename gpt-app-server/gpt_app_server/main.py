@@ -52,8 +52,7 @@ def ask_question(session_id: str, question: Question):
 
 @app.post("/uploadfile")
 async def create_upload_file(file: UploadFile):
-    print(file)
-    upload_document(file.filename, file.file)
+    upload_document(file.filename, file.file, hold_chat["retriever"])
     return "success"
 
 

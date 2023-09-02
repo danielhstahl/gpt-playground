@@ -3,21 +3,19 @@ import os
 from dotenv import load_dotenv
 from pathlib import Path
 import html2text
+from gpt_app_server.extract_filing_langchain import DEFAULT_FILE_STORAGE
 
 
 # download filing and save to "filings" folder
-def download_filing(url: str, render_api, directory: str = "./filings"):
+def download_filing(url: str, render_api, directory: str = DEFAULT_FILE_STORAGE):
     try:
         filing = render_api.get_filing(url)
-        # print(filing)
         # file_name example: 000156459019027952-msft-10k_20190630.htm
         file_name = url.split("/")[-2] + "-" + url.split("/")[-1]
         download_to = f"{directory}/{file_name}"
         file = Path(download_to)
         file.parent.mkdir(parents=True, exist_ok=True)
         file.write_text(html2text.html2text(filing))
-        # with open(download_to, "w") as f:
-        #    f.write(filing)
     except Exception as e:
         print("Problem with {url}".format(url=url))
         print(e)
