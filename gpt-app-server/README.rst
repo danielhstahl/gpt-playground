@@ -1,0 +1,1 @@
+Prepopulate the vector database with [filings](./filings).  These were created by running `poetry run python gpt_app_server/download_filings.py`.
