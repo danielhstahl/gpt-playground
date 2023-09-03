@@ -21,11 +21,11 @@ def download_filing(url: str, render_api, directory: str = DEFAULT_FILE_STORAGE)
         print(e)
 
 
-def download_10_q(query_api, render_api, ticker: str = "RF", quantity: int = 5):
+def download_10_q(query_api, render_api, ticker: str = "RF", quantity: int = 20):
     query = {
         "query": {
             "query_string": {
-                "query": f'formType:"10-Q" AND ticker:{ticker}',  # only 10-Qs
+                "query": f'(formType:"10-Q" OR formType:"10-K") AND ticker:{ticker}',  # only 10-Qs
             }
         },
         "from": "0",  # start returning matches from position null, i.e. the first matching filing
